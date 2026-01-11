@@ -1,9 +1,15 @@
 from fastapi import APIRouter
-from app.services.ollama import generate_password
+from fastapi.responses import PlainTextResponse
+from pydantic import BaseModel
+from app.services.password_ai import generate_password_from_hint
 
 router = APIRouter()
 
-@router.post("/generate")
-def generate(hint: str):
-    password = generate_password(hint)
-    return {"generated_password": password}
+class HintRequest(BaseModel):
+    hint: str
+
+@router.post("/ai/generate", response_class=PlainTextResponse)
+def generate(data: HintRequest):
+    return generate_password_from_hint(data.hint)
+
+

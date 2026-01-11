@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KeyCrate Password Generator</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 40px;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 8px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>KeyCrate</h2>
+    <p>Enter a private hint:</p>
+    <input id="hint" placeholder="Only you know this hint">
+    <button onclick="generate()">Generate Password</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function generate() {
+    const hint = document.getElementById("hint").value;
+
+    fetch("/ai/generate?hint=" + encodeURIComponent(hint), {
+        method: "POST"
+    })
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("result").innerText = data;
+    });
+}
+</script>
+
+</body>
+</html>
