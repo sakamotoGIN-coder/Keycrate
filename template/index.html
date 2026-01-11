@@ -1,55 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KeyCrate Password Generator</title>
+    <title>KeyCrate</title>
     <style>
         body {
-            font-family: Arial;
-            background: #f4f4f4;
-            padding: 40px;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
         .box {
-            background: white;
+            background: #1e293b;
             padding: 30px;
-            max-width: 400px;
-            margin: auto;
-            border-radius: 8px;
+            display: inline-block;
+            border-radius: 10px;
         }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-        }
-        .result {
-            margin-top: 15px;
-            font-weight: bold;
-            color: green;
+        .password {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #38bdf8;
         }
     </style>
 </head>
 <body>
+    <div class="box">
+        <h1>KeyCrate</h1>
+        <p>Secure Password Generator</p>
 
-<div class="box">
-    <h2>KeyCrate</h2>
-    <p>Enter a private hint:</p>
-    <input id="hint" placeholder="Only you know this hint">
-    <button onclick="generate()">Generate Password</button>
-    <div class="result" id="result"></div>
-</div>
+        <form method="post" action="/generate">
+            <button type="submit">Generate Password</button>
+        </form>
 
-<script>
-function generate() {
-    const hint = document.getElementById("hint").value;
-
-    fetch("/ai/generate?hint=" + encodeURIComponent(hint), {
-        method: "POST"
-    })
-    .then(res => res.text())
-    .then(data => {
-        document.getElementById("result").innerText = data;
-    });
-}
-</script>
-
+        {% if password %}
+        <div class="password">
+            {{ password }}
+        </div>
+        {% endif %}     
+    </div>
 </body>
 </html>
+

@@ -9,7 +9,8 @@ class HintRequest(BaseModel):
     hint: str
 
 @router.post("/ai/generate", response_class=PlainTextResponse)
-def generate(data: HintRequest):
+def generate_password(data: HintRequest):
     return generate_password_from_hint(data.hint)
+
 
 
