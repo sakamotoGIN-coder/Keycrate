@@ -1,48 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KeyCrate</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-            text-align: center;
-            padding-top: 100px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .box {
-            background: #1e293b;
-            padding: 30px;
-            display: inline-block;
-            border-radius: 10px;
-        }
-        .password {
-            margin-top: 20px;
-            font-size: 20px;
-            color: #38bdf8;
-        }
-    </style>
+    <title>Keycrate</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-    <div class="box">
-        <h1>KeyCrate</h1>
-        <p>Secure Password Generator</p>
+    <h1>Keycrate Password Generator</h1>
 
-        <form method="post" action="/generate">
-            <button type="submit">Generate Password</button>
-        </form>
+    <button onclick="generate()">Generate Password</button>
 
-        {% if password %}
-        <div class="password">
-            {{ password }}
-        </div>
-        {% endif %}     
-    </div>
+    <p id="result"></p>
+
+    <script>
+        async function generate() {
+            const response = await fetch("/generate");
+            const password = await response.text();
+            document.getElementById("result").innerText = password;
+        }
+    </script>
 </body>
 </html>
-
