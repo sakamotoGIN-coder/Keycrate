@@ -1,19 +1,24 @@
-from sqlalchemy import Column, Integer, String, DateTime
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey
 from app.database import Base
+
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+    username = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
 
-class VaultItem(Base):
-    __tablename__ = "vault"
+
+class Vault(Base):
+    __tablename__ = "vaults"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer)
-    platform = Column(String)
-    password_hash = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    platform = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+
+
+
+

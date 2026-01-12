@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyCrate</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="header">🔐 KeyCrate</div>
+
+  <!-- AUTH -->
+  <div id="auth">
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat" class="chat hidden"></div>
+
+  <!-- INPUT -->
+  <div id="generator" class="input-area hidden">
+    <input id="hint" placeholder="Hint (e.g strong gmail password)">
+    <input id="platform" placeholder="Platform (e.g Gmail)">
+    <button onclick="generate()">Generate</button>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
+
+
+

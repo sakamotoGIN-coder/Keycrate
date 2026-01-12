@@ -1,35 +1,17 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.models import VaultItem
-from app.services.security import hash_password
+from app.database import get_db
+from app.models import Vault
+from app.dependencies import get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix="/vault", tags=["Vault"])
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.post("/save")
-def save_password(
-    user_id: int,
-    platform: str,
-    password: str,
-    db: Session = Depends(get_db)
+@router.get("/")
+def get_vault(
+    db: Session = Depends(get_db),
+    user = Depends(get_current_user)
 ):
-    item = VaultItem(
-        user_id=user_id,
-        platform=platform,
-        password_hash=hash_password(password)
-    )
-    db.add(item)
-    db.commit()
-    return {"status": "Password saved securely"}
+    return db.query(Vault).filter(Vault.owner_id == user.id).all()
 
-@router.get("/list")
-def list_passwords(user_id: int, db: Session = Depends(get_db)):
-    items = db.query(VaultItem).filter(VaultItem.user_id == user_id).all()
-    return items
+
+

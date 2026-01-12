@@ -1,17 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
+from sqlalchemy.exc import IntegrityError
+
+from app.database import get_db
 from app.models import User
-from app.services.security import hash_password, verify_password
+from app.services.security import hash_password
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post("/register")
 def register(username: str, password: str, db: Session = Depends(get_db)):
@@ -19,18 +15,16 @@ def register(username: str, password: str, db: Session = Depends(get_db)):
         username=username,
         password_hash=hash_password(password)
     )
-    db.add(user)
-    db.commit()
-    return {"status": "User registered"}
 
-@router.post("/login")
-def login(username: str, password: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == username).first()
+    try:
+        db.add(user)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Username already exists"
+        )
 
-    if not user:
-        return {"error": "User not found"}
+    return {"message": "User registered successfully"}
 
-    if verify_password(user.password_hash, password):
-        return {"status": "Login successful"}
-
-    return {"error": "Invalid password"}
