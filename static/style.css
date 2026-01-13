@@ -1,70 +1,133 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
 body {
-  margin: 0;
-  background: #0f172a;
-  font-family: Arial, sans-serif;
-  color: white;
+    margin: 0;
+    background: #0f0f0f;
+    color: #eaeaea;
 }
 
-.app {
-  max-width: 700px;
-  margin: auto;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: #000;
 }
 
-.header {
-  padding: 15px;
-  text-align: center;
-  font-size: 20px;
-  background: #020617;
-  border-bottom: 1px solid #1e293b;
+.logo {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.chat {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+.user-actions button {
+    background: none;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 5px 12px;
+    cursor: pointer;
 }
 
-.message {
-  margin-bottom: 12px;
-  padding: 10px;
-  border-radius: 8px;
-  max-width: 80%;
+/* Main */
+.main-container {
+    text-align: center;
+    margin-top: 120px;
 }
 
-.user {
-  background: #1e293b;
-  align-self: flex-end;
+.generator-box {
+    margin: 30px auto;
+    display: flex;
+    max-width: 600px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    padding: 10px;
 }
 
-.ai {
-  background: #020617;
-  border: 1px solid #1e293b;
+.generator-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
 }
 
-.input-area {
-  display: flex;
-  gap: 8px;
-  padding: 10px;
-  background: #020617;
+.generator-box button {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 20px;
+    cursor: pointer;
 }
 
-input {
-  flex: 1;
-  padding: 10px;
-  background: #0f172a;
-  border: 1px solid #1e293b;
-  color: white;
-  border-radius: 6px;
+.output {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #9effa1;
 }
 
-button {
-  padding: 10px 15px;
-  background: #2563eb;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.modal-content {
+    background: #111;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+}
+
+.modal-content input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #222;
+    border: none;
+    color: #fff;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 8px;
+    background: #444;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+.toggle {
+    margin-top: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+/* Vault */
+.vault-container {
+    padding: 30px;
+}
+
+.vault-item {
+    background: #1c1c1c;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+
+
+

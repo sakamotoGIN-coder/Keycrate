@@ -1,49 +1,44 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 import requests
-
-from app.database import get_db
-from app.models import Vault
-from app.dependencies import get_current_user
-from app.security.crypto import encrypt_password
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL = "llama3"
 
-@router.post("/generate-and-save")
-def generate_and_save(
-    hint: str,
-    platform: str,
-    username: str,
-    db: Session = Depends(get_db)
-):
-    user = get_current_user(username, db)
+class GenerateRequest(BaseModel):
+    hint: str
 
-    prompt = f"Generate ONE strong password based on this hint: {hint}. Only output the password, 12 characters, including upper and lower case letters, numbers, and special characters."
+@router.post("/generate")
+def generate_password(req: GenerateRequest):
+    prompt = f"""
+Generate ONE secure password only.
+No explanation.
+Hint: {req.hint}
+"""
 
-    response = requests.post(
-        "http://localhost:11434/api/generate",
+    r = requests.post(
+        OLLAMA_URL,
         json={
-            "model": "llama3",
+            "model": MODEL,
             "prompt": prompt,
             "stream": False
-        }
+        },
+        timeout=60
     )
 
-    password = response.json()["response"].strip()
+    if r.status_code != 200:
+        raise HTTPException(status_code=500, detail="Ollama failed")
 
-    encrypted = encrypt_password(password)
+    data = r.json()
+    password = data.get("response", "").strip()
 
-    vault = Vault(
-        platform=platform,
-        password=encrypted,
-        owner_id=user.id
-    )
+    if not password:
+        raise HTTPException(status_code=500, detail="Empty AI response")
 
-    db.add(vault)
-    db.commit()
+    return {"generated_password": password}
 
-    return {"password": password}
 
 
 

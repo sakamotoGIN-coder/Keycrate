@@ -1,79 +1,99 @@
-let token = "";
+let mode = "login";
 
-function addMessage(text, sender = "ai") {
-  const chat = document.getElementById("chat");
-  const div = document.createElement("div");
-  div.className = sender;
-  div.innerText = text;
-  chat.appendChild(div);
+// Toggle login / register
+function toggleMode() {
+    mode = mode === "login" ? "register" : "login";
+    document.getElementById("authTitle").innerText =
+        mode === "login" ? "Login" : "Register";
+    document.getElementById("toggle").innerText =
+        mode === "login"
+            ? "Don't have an account? Sign up"
+            : "Already have an account? Login";
 }
 
-async function register() {
-  const u = username.value;
-  const p = password.value;
+// Submit auth
+async function submitAuth() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    document.getElementById("authError").innerText = "";
 
-  const res = await fetch(`/register?username=${u}&password=${p}`, { method: "POST" });
-  alert(await res.text());
+    let res;
+
+    if (mode === "login") {
+        // 🔴 LOGIN → FORM DATA (REQUIRED)
+        const formData = new URLSearchParams();
+        formData.append("username", username);
+        formData.append("password", password);
+
+        res = await fetch("/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData.toString()
+        });
+
+    } else {
+        // 🟢 REGISTER → JSON
+        res = await fetch("/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+    }
+
+    if (!res.ok) {
+        document.getElementById("authError").innerText =
+            "Authentication failed";
+        return;
+    }
+
+    const data = await res.json();
+
+    // Login returns token, register may not
+    if (data.access_token) {
+        localStorage.setItem("token", data.access_token);
+    }
+
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("userLabel").innerText = username;
+    document.getElementById("logoutBtn").hidden = false;
 }
 
-async function login() {
-  const u = username.value;
-  const p = password.value;
+// Logout
+document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("token");
+    location.reload();
+};
 
-  const res = await fetch("/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: u, password: p })
-  });
-
-  const data = await res.json();
-  token = data.access_token;
-
-  document.getElementById("auth").classList.add("hidden");
-  document.getElementById("chat").classList.remove("hidden");
-  document.getElementById("generator").classList.remove("hidden");
-
-  addMessage("Logged in successfully 🔓");
-}
-
+// Generate password
 async function generate() {
-  const hint = document.getElementById("hint").value;
-  const platform = document.getElementById("platform").value;
+    const hint = document.getElementById("hint").value;
+    const token = localStorage.getItem("token");
 
-  addMessage("Generating password...", "user");
+    const res = await fetch("/ai/generate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ hint })
+    });
 
-  const res = await fetch("/ai/generate-and-save", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ hint, platform })
-  });
+    if (!res.ok) {
+        document.getElementById("output").innerText =
+            "Generation failed";
+        return;
+    }
 
-  const data = await res.json();
-  addMessage(`🔑 ${data.password}`);
+    const data = await res.json();
+    document.getElementById("output").innerText = data.password;
 }
 
-  const data = await res.json();
 
-  if (res.ok) {
-    addMessage(`Generated Password:\n${data.password}`, "ai");
-  } else {
-    addMessage(`Error: ${data.detail}`, "ai");
-  }
 
-  async function loadVault() {
-  const res = await fetch("/vault/", {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
 
-  const data = await res.json();
-  addMessage("📦 Saved Passwords:");
 
-  data.forEach(v => {
-    addMessage(`${v.platform}: ${v.password}`);
-  });
-}
 
-}
+
+

@@ -1,37 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KeyCrate</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <title>KeyCrate</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<div class="app">
-  <div class="header">🔐 KeyCrate</div>
+<!-- Top Bar -->
+<header class="top-bar">
+    <div class="logo">
+        <!-- You can replace this text with an image later -->
+        <img src="logo.png" alt="KeyCrate" width="100" height="auto">
 
-  <!-- AUTH -->
-  <div id="auth">
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
-  </div>
+    </div>
 
-  <!-- CHAT -->
-  <div id="chat" class="chat hidden"></div>
+    <div class="user-actions">
+        <span id="userLabel"></span>
+        <button id="logoutBtn" hidden>Logout</button>
+    </div>
+</header>
 
-  <!-- INPUT -->
-  <div id="generator" class="input-area hidden">
-    <input id="hint" placeholder="Hint (e.g strong gmail password)">
-    <input id="platform" placeholder="Platform (e.g Gmail)">
-    <button onclick="generate()">Generate</button>
-  </div>
+<!-- Main -->
+<main class="main-container">
+
+    <h1>Generate your recognizable password</h1>
+
+    <div class="generator-box">
+        <input
+            id="hint"
+            type="text"
+            placeholder="e.g. gmail password but memorable"
+            onkeydown="if(event.key==='Enter'){generate()}"
+        />
+        <button onclick="generate()">⬆</button>
+    </div>
+
+    <div class="output" id="output"></div>
+
+</main>
+
+<!-- Auth Modal -->
+<div class="modal" id="auth">
+    <div class="modal-content">
+        <h2 id="authTitle">Login</h2>
+
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+
+        <p class="error" id="authError"></p>
+
+        <button onclick="submitAuth()">Submit</button>
+
+        <p class="toggle" id="toggle" onclick="toggleMode()">
+            Don't have an account? Sign up
+        </p>
+    </div>
 </div>
 
 <script src="/static/app.js"></script>
 </body>
 </html>
+
+
+
+
 
 
 
