@@ -7,7 +7,7 @@ jinja2
 python-multipart
 cryptography
 python-jose
-
+PyJWT
 
 
 

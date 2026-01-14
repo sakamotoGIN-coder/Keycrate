@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
+
 from app.database import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -9,17 +12,21 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
 
-    vaults = relationship("Vault", back_populates="owner")
+    vault_entries = relationship("VaultEntry", back_populates="owner", cascade="all, delete-orphan")
 
 
-class Vault(Base):
-    __tablename__ = "vaults"
+class VaultEntry(Base):
+    __tablename__ = "vault_entries"
 
     id = Column(Integer, primary_key=True, index=True)
-    encrypted_password = Column(String, nullable=False)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    platform = Column(String, nullable=False)
+    password_encrypted = Column(String, nullable=False)
 
-    owner = relationship("User", back_populates="vaults")
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner = relationship("User", back_populates="vault_entries")
+
 
 
 

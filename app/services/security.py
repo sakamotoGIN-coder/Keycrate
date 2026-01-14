@@ -1,28 +1,25 @@
-from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError
+import os
+import jwt
+from datetime import datetime, timedelta
 
-ph = PasswordHasher()
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
+ALGORITHM = "HS256"
+EXPIRE_MINUTES = 60 * 24
 
-def hash_password(password: str) -> str:
-    return ph.hash(password)
+def create_token(data: dict) -> str:
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def verify_password(hashed_password: str, plain_password: str) -> bool:
+def decode_token(token: str) -> dict:
     try:
-        ph.verify(hashed_password, plain_password)
-        return True
-    except VerifyMismatchError:
-        return False
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise Exception("Token expired")
+    except jwt.InvalidTokenError:
+        raise Exception("Invalid token")
 
-from argon2 import PasswordHasher
 
-ph = PasswordHasher()
 
-def hash_password(password: str) -> str:
-    return ph.hash(password)
-
-def verify_password(password: str, hashed: str) -> bool:
-    try:
-        return ph.verify(hashed, password)
-    except Exception:
-        return False
 

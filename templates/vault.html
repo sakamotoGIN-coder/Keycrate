@@ -1,27 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vault | KeyCrate</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vault | KeyCrate</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" type="image/png" href="/static/favicon.png">
 </head>
 <body>
 
-<header class="top-bar">
-    <div class="logo">🔐 KeyCrate Vault</div>
-    <button onclick="location.href='/'">Back</button>
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-head">
+    <div class="sidebar-title">Menu</div>
+    <button class="icon-btn" id="closeSidebarBtn" aria-label="Close">✕</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="sidebar-item" id="generateNavBtn">Generate</button>
+    <button class="sidebar-item" id="vaultBtn">Vault</button>
+  </nav>
+</aside>
+
+<div id="sidebarBackdrop" class="backdrop hidden"></div>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" id="openSidebarBtn" aria-label="Menu">☰</button>
+
+    <a href="/" class="brand">
+      <!-- Later: /static/logo.png -->
+      <img src="/static/logo.png" class="brand-img" alt="KeyCrate">
+    </a>
+  </div>
+
+ <div class="topbar-right" id="topbarRight"></div>
+
 </header>
 
-<main class="vault-container">
-    <h2>Your Vault</h2>
-    <div id="vaultList"></div>
+<main class="vault-page">
+  <h2 class="vault-title">Your Vault</h2>
+
+  <div class="vault-toolbar">
+    <input id="vaultSearch" class="vault-search" placeholder="Search platform..." />
+    <select id="vaultSort" class="vault-sort">
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+      <option value="az">Platform A–Z</option>
+      <option value="za">Platform Z–A</option>
+    </select>
+    <button class="ghost-btn" id="vaultRefreshBtn">Refresh</button>
+  </div>
+
+  <div class="vault-table-wrap">
+    <table class="vault-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Created</th>
+          <th>Password</th>
+          <th style="width:280px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vaultTbody">
+        <tr><td colspan="4" class="vault-empty">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </main>
 
 <script src="/static/app.js"></script>
 <script>
-    loadVault();
+  initVaultPageEnhanced();
 </script>
+
 </body>
 </html>
+
 
 

@@ -1,66 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>KeyCrate</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KeyCrate</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+
 </head>
 <body>
 
-<!-- Top Bar -->
-<header class="top-bar">
-    <div class="logo">
-        <!-- You can replace this text with an image later -->
-        <img src="logo.png" alt="KeyCrate" width="100" height="auto">
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-head">
+    <div class="sidebar-title">Menu</div>
+    <button class="icon-btn" id="closeSidebarBtn" aria-label="Close">✕</button>
+  </div>
 
-    </div>
+  <nav class="sidebar-nav">
+    <button class="sidebar-item" id="generateNavBtn">Generate</button>
+    <button class="sidebar-item" id="vaultBtn">Vault</button>
+  </nav>
+</aside>
 
-    <div class="user-actions">
-        <span id="userLabel"></span>
-        <button id="logoutBtn" hidden>Logout</button>
-    </div>
+<div id="sidebarBackdrop" class="backdrop hidden"></div>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" id="openSidebarBtn" aria-label="Menu">☰</button>
+
+    <a href="/" class="brand">
+      <!-- Add later: /static/logo.png -->
+      <img src="/static/logo.png" class="brand-img" alt="KeyCrate">
+    </a>
+  </div>
+
+  <div class="topbar-right" id="topbarRight"></div>
 </header>
 
-<!-- Main -->
-<main class="main-container">
+<main class="main">
+  <h1 class="title">
+    Generate your
+    <span class="rotate-wrap" aria-label="Rotating meaning word">
+  <span class="rotate-window">
+    <span class="rotate-track">
+      <span class="rotate-word">RECOGNIZABLE</span>
+      <span class="rotate-word">αλησμόνητος</span>
+      <span class="rotate-word">懐かしい</span>
+      <span class="rotate-word">whakamahara</span>
+      <span class="rotate-word">NOSTALGIA</span>
+    </span>
+  </span>
+</span>
 
-    <h1>Generate your recognizable password</h1>
+    password
+  </h1>
 
-    <div class="generator-box">
-        <input
-            id="hint"
-            type="text"
-            placeholder="e.g. gmail password but memorable"
-            onkeydown="if(event.key==='Enter'){generate()}"
-        />
-        <button onclick="generate()">⬆</button>
+  <div class="prompt-wrap">
+    <div class="prompt-box">
+      <input
+        id="hint"
+        class="prompt-input"
+        type="text"
+        placeholder="Example: gmail, strong but easy to remember"
+        autocomplete="off"
+      />
+      <button id="generateBtn" class="send-btn" aria-label="Generate">GO</button>
     </div>
 
-    <div class="output" id="output"></div>
+    <div class="chips" id="chips">
+      <span class="chip">email</span>
+      <span class="chip">bank</span>
+      <span class="chip">gaming</span>
+      <span class="chip">work</span>
+    </div>
+  </div>
 
+  <div class="result-wrap">
+    <div class="result-label">Generated password</div>
+
+    <div class="result-row">
+      <div id="output" class="result"></div>
+      <button id="copyBtn" class="ghost-btn">Copy</button>
+    </div>
+
+    <div class="result-actions">
+      <button id="saveBtn" class="primary-btn">Save</button>
+    </div>
+  </div>
 </main>
 
-<!-- Auth Modal -->
-<div class="modal" id="auth">
-    <div class="modal-content">
-        <h2 id="authTitle">Login</h2>
+<!-- Auth modal -->
+<div id="authModal" class="modal">
+  <div class="modal-card">
+    <h2 id="authTitle" class="modal-title">Login</h2>
 
-        <input id="username" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
+    <input id="username" class="modal-input" placeholder="Username" autocomplete="username" />
+    <input id="password" class="modal-input" type="password" placeholder="Password" autocomplete="current-password" />
 
-        <p class="error" id="authError"></p>
+    <p id="authError" class="modal-error"></p>
 
-        <button onclick="submitAuth()">Submit</button>
+    <button id="authSubmitBtn" class="modal-primary">Submit</button>
 
-        <p class="toggle" id="toggle" onclick="toggleMode()">
-            Don't have an account? Sign up
-        </p>
+    <p class="modal-toggle">
+      <span id="toggleText">Don't have an account?</span>
+      <button id="toggleModeBtn" class="link-btn" type="button">Sign up</button>
+    </p>
+  </div>
+</div>
+
+<!-- Save popup -->
+<div id="platformModal" class="modal hidden">
+  <div class="modal-card">
+    <h2 class="modal-title">Save to Vault</h2>
+
+    <input id="platformInput" class="modal-input" placeholder="Platform (e.g., Gmail, Instagram)" />
+    <p id="platformError" class="modal-error"></p>
+
+    <div class="modal-actions">
+      <button id="platformCancelBtn" class="ghost-btn">Cancel</button>
+      <button id="platformSaveBtn" class="modal-primary">Save</button>
     </div>
+  </div>
 </div>
 
 <script src="/static/app.js"></script>
 </body>
 </html>
+
+
 
 
 
